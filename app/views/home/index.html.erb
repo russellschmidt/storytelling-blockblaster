@@ -13,8 +13,8 @@ var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height-30;
 var xDir = Math.random() >= 0.5 ? 1 : -1
-var dx = (Math.random() * 3 + 1) * xDir;
-var dy = -(Math.random() * 3 + 1)
+var dx = 4
+var dy = -4
 var paddleHeight = 10;
 var paddleWidth = 75;
 var paddleX = (canvas.width-paddleWidth)/2;
@@ -29,6 +29,7 @@ var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var score = 0;
 var lives = 3;
+var gameNumber = 0;
 
 var bricks = [];
 for(var c=0; c<brickColumnCount; c++) {
@@ -75,6 +76,9 @@ function collisionDetection() {
           score++;
           if (score === brickRowCount * brickColumnCount) {
             alert('you the (wo)man now, dog')
+            gameNumber++
+            dx = dx * 1.5
+            dy = dy* 1.5
             document.location.reload()
           }
         }
@@ -124,7 +128,11 @@ function drawScore() {
   ctx.fillStyle = "#0095DD";
   ctx.fillText("Score: "+score, 8, 20)
 }
-
+function drawGames(){
+  ctx.font = "16px TimesNewRoman"
+  ctx.fillStyle = "#0095dd"
+  ctx.fillText("Game: "+gameNumber, canvas.width/2-10, 20)
+}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
@@ -132,6 +140,7 @@ function draw() {
   drawPaddle();
   drawScore();
   drawLives();
+  drawGames();
   collisionDetection();
 
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
@@ -148,12 +157,15 @@ function draw() {
       lives--
       if(!lives) {
         alert("Game Over")
+        gameNumber = 0
+        dx = 2
+        dy = -2
         document.location.reload();
       } else {
         x = canvas.width/2;
         y = canvas.height-30;
-        dx = 2;
-        dy = -2;
+        dx = -dx;
+        dy = -dy;
         paddleX = (canvas.width-paddleWidth)/2;
       }
     }
